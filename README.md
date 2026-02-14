@@ -1,228 +1,155 @@
-# ECM MCP Server - Spring Boot 4
+# ECM MCP Server - Spring Boot
 
-A production-ready **Model Context Protocol (MCP) server** built with **Spring Boot 4** and **Java 21** for seamless integration with Enterprise Content Management (ECM) REST APIs. This server enables AI assistants and MCP clients to manage documents, search content, organize folders, handle metadata, control versions, and manage workflows within enterprise content management systems.
+A production-ready **Model Context Protocol (MCP) server** built with **Spring Boot 3.4.2** and **Java 21** for seamless integration with Enterprise Content Management (ECM) REST APIs. This server enables AI assistants like Claude Desktop to interact with ECM systems through a clean, extensible architecture.
 
-> 🚀 **Ready to build your own MCP server?** This repository is designed to be **extensible and reusable** for JPMorgan Chase and other enterprises. See [docs/COPILOT_GUIDE.md](docs/COPILOT_GUIDE.md) for detailed instructions.
+> 🚀 **Ready to build your own MCP server at JPMorgan Chase?** This repository is designed to be **extensible and reusable**. See [COPILOT.md](COPILOT.md) for comprehensive documentation that GitHub Copilot can use to help you build features.
+
+---
 
 ## 📚 Documentation
 
-- **[Quick Start Guide](QUICKSTART.md)** - Get up and running in minutes
-- **[Architecture Documentation](docs/ARCHITECTURE.md)** - System design and patterns
-- **[Copilot Guide](docs/COPILOT_GUIDE.md)** - Comprehensive guide for extending the server
+- **[COPILOT.md](COPILOT.md)** - Comprehensive guide for GitHub Copilot and developers
+  - Architecture overview with diagrams
+  - Complete component documentation
+  - Step-by-step guide to adding new tools
+  - Code patterns and examples
+  - Testing strategies
+  - Best practices
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed system design documentation
+  - High-level architecture diagrams
+  - Data flow visualizations
+  - Component interactions
+  - Design patterns
+  - Technology stack details
+  - Future enhancements
+
+---
 
 ## ⚡ Quick Start
 
-```bash
-# 1. Pull latest changes
-git pull origin main
-
-# 2. Build the project (Java 21 required)
-mvn clean install
-
-# 3. Run the server
-java -jar target/ecm-mcp-server-1.0.0.jar
-
-# 4. Test the server
-curl http://localhost:8080/actuator/health
-```
-
-**Note**: The recent compilation error with `--enable-preview` has been fixed. If you encounter build issues, pull the latest changes from main branch.
-
-## 🚀 Features
-
-### Document Management
-- Get document information by ID
-- Delete documents
-- Upload documents (multipart support)
-- Download document content
-
-### Search Capabilities
-- Full-text search across documents
-- Advanced search with filters:
-  - Document type filtering
-  - Date range queries
-  - Folder-scoped search
-  - Tag-based filtering
-  - Custom metadata search
-
-### Folder Organization
-- Create hierarchical folder structures
-- List folder contents (documents and subfolders)
-- Move documents between folders
-- Get folder tree visualization
-- Delete folders (recursive support)
-
-### Metadata Management
-- Retrieve document metadata
-- Update metadata fields
-- View metadata schemas by document type
-
-### Version Control
-- View complete version history
-- Create new versions (major/minor)
-- Restore previous versions
-- Version comments and tracking
-
-### Workflow Management
-- Start workflows on documents
-- Monitor workflow status
-- Approve workflow steps
-- Reject workflows with reasons
-
-## 🏗️ Architecture
-
-### Technology Stack
-- **Spring Boot 4.0.0** - Latest Spring Boot framework
-- **Java 21** - Modern Java with latest features
-- **Spring WebFlux** - Reactive programming for non-blocking I/O
-- **Resilience4j** - Circuit breaker, retry, and rate limiting
-- **Micrometer** - Observability with Prometheus integration
-- **Lombok** - Reduce boilerplate code
-
-### Extensible Design
-
-This server is built with extensibility in mind:
-
-✅ **Easy to add new MCP tools** - Simple annotation-based registration
-✅ **Pluggable ECM backends** - Support multiple ECM systems (FileNet, SharePoint, Documentum)
-✅ **Configuration-driven** - Environment-specific settings
-✅ **Enterprise-ready** - Built-in resilience, monitoring, and security
-✅ **Well-documented** - Comprehensive guides for extending functionality
-
-See [Architecture Documentation](docs/ARCHITECTURE.md) for details.
-
-### Project Structure
-
-```
-ecm-mcp-server-springboot/
-├── docs/
-│   ├── ARCHITECTURE.md           # System design and patterns
-│   └── COPILOT_GUIDE.md          # Comprehensive extension guide
-├── src/main/java/com/jpmc/ecm/
-│   ├── EcmMcpServerApplication.java    # Main application class
-│   ├── client/                         # ECM backend clients
-│   │   ├── EcmClient.java              # Common interface
-│   │   ├── FileNetClient.java          # FileNet implementation
-│   │   └── SharePointClient.java       # SharePoint implementation
-│   ├── config/                         # Configuration classes
-│   │   ├── EcmProperties.java          # ECM configuration
-│   │   ├── WebClientConfig.java        # HTTP client setup
-│   │   └── ResilienceConfig.java       # Resilience patterns
-│   ├── controller/                     # REST controllers
-│   │   └── McpController.java          # MCP HTTP endpoints
-│   ├── service/                        # Business services
-│   │   ├── DocumentService.java        # Document operations
-│   │   ├── SearchService.java          # Search operations
-│   │   ├── WorkflowService.java        # Workflow operations
-│   │   └── SecurityService.java        # Security operations
-│   ├── dto/                            # Data Transfer Objects
-│   ├── exception/                      # Exception handling
-│   └── mcp/                            # MCP Protocol layer
-│       ├── model/                      # MCP models
-│       │   ├── McpRequest.java
-│       │   ├── McpResponse.java
-│       │   ├── McpTool.java
-│       │   └── McpToolParameter.java
-│       ├── service/                    # MCP services
-│       │   ├── McpToolRegistry.java    # Tool registration
-│       │   └── McpToolExecutor.java    # Tool execution
-│       └── handler/                    # Protocol handlers
-│           └── McpProtocolHandler.java
-├── src/main/resources/
-│   ├── application.yml                 # Main configuration
-│   ├── application-dev.yml             # Development profile
-│   └── application-prod.yml            # Production profile
-├── QUICKSTART.md                       # Quick start guide
-└── pom.xml                             # Maven dependencies
-```
-
-## 📦 Installation
-
 ### Prerequisites
-- **Java 21** or higher ([Download](https://adoptium.net/temurin/releases/?version=21))
-- **Maven 3.8+** ([Download](https://maven.apache.org/download.cgi))
+- **Java 21** ([Download OpenJDK 21](https://adoptium.net/temurin/releases/?version=21))
+- **Maven 3.9+** ([Download Maven](https://maven.apache.org/download.cgi))
 - Access to ECM REST API
-- API credentials
 
-### Build from Source
+### Build & Run
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/vspaswin/ecm-mcp-server-springboot.git
 cd ecm-mcp-server-springboot
 
-# Verify Java version
-java -version  # Should show Java 21
-
-# Build with Maven
+# 2. Build (Java 21 required)
 mvn clean install
 
-# Run the application
+# 3. Run with environment variables
+ECM_BASE_URL=http://localhost:8081/api \
+ECM_USERNAME=admin \
+ECM_PASSWORD=admin \
 java -jar target/ecm-mcp-server-1.0.0.jar
 ```
 
-**Troubleshooting Build Issues**:
+**✅ Build Status**: Recent compilation errors fixed. If you encounter issues, pull latest from main.
 
-If you see `"invalid source release 21 with --enable-preview"` error:
-```bash
-git pull origin main  # Get the fixed pom.xml
-mvn clean
-mvn install
+---
+
+## 🏗️ Architecture Overview
+
+```
+┌──────────────────────────────────────────┐
+│   AI Assistant (Claude Desktop, etc.)    │
+│  - Natural language understanding        │
+│  - Tool selection & execution            │
+└─────────────────┬────────────────────────┘
+                  │ MCP Protocol (JSON-RPC over STDIO)
+┌─────────────────▼────────────────────────┐
+│      ECM MCP Server (This Application)   │
+│                                          │
+│  ┌────────────────────────────────────┐ │
+│  │   McpServerApplication             │ │
+│  │   - JSON-RPC handler               │ │
+│  │   - Tool routing                   │ │
+│  └──────────────┬─────────────────────┘ │
+│                 │                        │
+│  ┌──────────────▼─────────────────────┐ │
+│  │        Handler Layer               │ │
+│  │  DocumentHandler | FolderHandler   │ │
+│  │  SearchHandler | SecurityHandler   │ │
+│  └──────────────┬─────────────────────┘ │
+│                 │                        │
+│  ┌──────────────▼─────────────────────┐ │
+│  │        Service Layer               │ │
+│  │  DocumentService | SearchService   │ │
+│  └──────────────┬─────────────────────┘ │
+│                 │                        │
+│  ┌──────────────▼─────────────────────┐ │
+│  │        EcmApiClient                │ │
+│  │  (WebClient - reactive HTTP)       │ │
+│  └──────────────┬─────────────────────┘ │
+└─────────────────┼────────────────────────┘
+                  │ REST API (HTTP)
+┌─────────────────▼────────────────────────┐
+│       ECM Backend System                 │
+│  - Document storage & management         │
+│  - Search & workflow                     │
+└──────────────────────────────────────────┘
 ```
 
-See [QUICKSTART.md](QUICKSTART.md) for detailed build instructions and troubleshooting.
+**Key Features**:
+- ✅ **Layered architecture** - Handler → Service → Client separation
+- ✅ **Reactive programming** - Non-blocking I/O with Spring WebFlux
+- ✅ **Extensible design** - Easy to add new tools and ECM backends
+- ✅ **Production-ready** - Error handling, validation, logging
 
-### Configuration
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed diagrams and design patterns.
 
-Create `.env` file from example:
+---
 
-```bash
-cp .env.example .env
-```
+## 🛠️ Available MCP Tools
 
-Edit `.env` with your settings:
+### Document Management
+- `document_get` - Retrieve document by ID
+- `document_create` - Create new document
+- `document_update` - Update document metadata
+- `document_delete` - Delete document
+- `document_get_content` - Get document binary content
+- `document_get_versions` - List all versions
+- `document_checkout` - Check out for editing
+- `document_checkin` - Check in after editing
+- `document_cancel_checkout` - Cancel checkout
 
-```bash
-# FileNet Configuration
-FILENET_BASE_URL=http://your-filenet-server:9080/fncmis
-FILENET_USERNAME=admin
-FILENET_PASSWORD=your-password
+### Folder Management
+- `folder_get` - Get folder information
+- `folder_create` - Create new folder
+- `folder_update` - Update folder metadata
+- `folder_delete` - Delete folder
+- `folder_list_children` - List folder contents
+- `folder_move` - Move folder to new parent
 
-# Server Configuration
-SERVER_PORT=8080
-```
+### Search
+- `search_documents` - Search documents with query
+- `search_advanced` - Advanced search with filters
 
-Or use environment variables directly:
+### Security
+- `security_get_permissions` - Get object permissions
+- `security_set_permissions` - Set permissions
+- `security_add_user` - Add user permission
+- `security_remove_user` - Remove user permission
 
-```bash
-export FILENET_BASE_URL=https://your-filenet-server:9080/fncmis
-export FILENET_USERNAME=your_username
-export FILENET_PASSWORD=your_password
-```
+### Workflow
+- `workflow_start` - Start workflow on object
+- `workflow_get_status` - Get workflow status
+- `workflow_approve` - Approve workflow task
+- `workflow_reject` - Reject workflow task
 
-## 🚀 Usage
+### Metadata
+- `metadata_get_schema` - Get object type schema
+- `metadata_validate` - Validate metadata values
 
-### Running the Server
+---
 
-**Development mode:**
-```bash
-mvn spring-boot:run
-```
-
-**Production mode:**
-```bash
-java -jar target/ecm-mcp-server-1.0.0.jar
-```
-
-**With custom configuration:**
-```bash
-java -jar target/ecm-mcp-server-1.0.0.jar \
-  --ecm.filenet.base-url=https://filenet.example.com \
-  --ecm.filenet.username=myuser \
-  --ecm.filenet.password=mypass
-```
-
-### Integration with Claude Desktop
+## 🔌 Integration with Claude Desktop
 
 **macOS**: Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
 
@@ -231,310 +158,320 @@ java -jar target/ecm-mcp-server-1.0.0.jar \
 ```json
 {
   "mcpServers": {
-    "ecm-mcp-server": {
+    "ecm": {
       "command": "java",
       "args": [
         "-jar",
-        "/absolute/path/to/ecm-mcp-server-springboot/target/ecm-mcp-server-1.0.0.jar"
+        "/absolute/path/to/ecm-mcp-server-1.0.0.jar"
       ],
       "env": {
-        "FILENET_BASE_URL": "http://your-filenet-server:9080/fncmis",
-        "FILENET_USERNAME": "admin",
-        "FILENET_PASSWORD": "password"
+        "ECM_BASE_URL": "http://localhost:8081/api",
+        "ECM_USERNAME": "admin",
+        "ECM_PASSWORD": "admin"
       }
     }
   }
 }
 ```
 
-Restart Claude Desktop and look for the hammer icon (🔨) to see available tools.
-
-### Integration with VSCode Copilot
-
-Create `.mcp.json` in your workspace or `%USERPROFILE%` (Windows) / `~/` (macOS/Linux):
-
-```json
-{
-  "servers": {
-    "ecm-mcp-server": {
-      "command": "java",
-      "args": ["-jar", "/absolute/path/to/target/ecm-mcp-server-1.0.0.jar"],
-      "env": {
-        "FILENET_BASE_URL": "http://your-filenet-server:9080/fncmis"
-      }
-    }
-  }
-}
-```
-
-### Available MCP Tools
-
-#### Documents
-- `ecm_get_document` - Get document information by ID
-- `ecm_create_document` - Create new document
-- `ecm_update_document` - Update document
-- `ecm_delete_document` - Delete document
-
-#### Search
-- `ecm_search_documents` - Search documents with query
-
-#### Metadata
-- `ecm_get_metadata` - Get document metadata
-- `ecm_update_metadata` - Update metadata fields
-
-#### Workflows (Extensible)
-- `workflow_start` - Start workflow instance
-- `workflow_get_status` - Get workflow status
-
-#### Security (Extensible)
-- `security_check_permission` - Check user permissions
-- `security_grant_permission` - Grant permissions
-
-### Testing the Server
-
-**Health Check:**
-```bash
-curl http://localhost:8080/actuator/health
-```
-
-**List MCP Tools:**
-```bash
-curl -X POST http://localhost:8080/mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "tools/list",
-    "params": {}
-  }'
-```
-
-**Call a Tool:**
-```bash
-curl -X POST http://localhost:8080/mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": "2",
-    "method": "tools/call",
-    "params": {
-      "name": "ecm_get_document",
-      "arguments": {"documentId": "DOC-123"}
-    }
-  }'
-```
-
-## 🔧 Extending the Server
-
-### Adding New MCP Tools
-
-1. Create a service class
-2. Use `@PostConstruct` to register tools
-3. Define tool schema with parameters
-4. Implement executor logic
-
-**Example:**
-
-```java
-@Service
-@RequiredArgsConstructor
-public class CustomService {
-    private final McpToolRegistry registry;
-    
-    @PostConstruct
-    public void registerTools() {
-        McpTool tool = McpTool.builder()
-            .name("custom_tool")
-            .description("My custom tool")
-            .inputSchema(Map.of(
-                "param1", McpToolParameter.builder()
-                    .type("string")
-                    .description("Parameter description")
-                    .required(true)
-                    .build()
-            ))
-            .build();
-            
-        registry.registerTool(tool, params -> {
-            // Your logic here
-            return result;
-        });
-    }
-}
-```
-
-See [docs/COPILOT_GUIDE.md](docs/COPILOT_GUIDE.md) for comprehensive examples and patterns.
-
-### Adding New ECM Backends
-
-1. Implement `EcmClient` interface
-2. Add configuration properties
-3. Configure WebClient
-4. Add authentication logic
-
-**Example:**
-
-```java
-@Component
-public class DocumentumClient implements EcmClient {
-    @Override
-    public Mono<Map<String, Object>> getDocument(String id) {
-        // Implement Documentum-specific logic
-        return webClient.get()
-            .uri(baseUrl + "/documents/{id}", id)
-            .retrieve()
-            .bodyToMono(Map.class);
-    }
-}
-```
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture patterns.
-
-## 📊 Monitoring
-
-### Actuator Endpoints
-
-- **Health**: `http://localhost:8080/actuator/health`
-- **Metrics**: `http://localhost:8080/actuator/metrics`
-- **Prometheus**: `http://localhost:8080/actuator/prometheus`
-- **Info**: `http://localhost:8080/actuator/info`
-
-### Prometheus Metrics
-
-Metrics include:
-- HTTP request metrics
-- ECM API call metrics
-- Circuit breaker statistics
-- Retry statistics
-- JVM metrics (heap, threads, GC)
-- Custom MCP tool metrics
-
-### Health Checks
-
-Comprehensive health checks:
-- Application status
-- ECM API connectivity
-- Circuit breaker status
-- Disk space
-- Custom health indicators
-
-## 🧪 Testing
-
-**Run all tests:**
-```bash
-mvn test
-```
-
-**Run specific test:**
-```bash
-mvn test -Dtest=DocumentServiceTest
-```
-
-**Run integration tests:**
-```bash
-mvn verify
-```
-
-**Skip tests (faster builds):**
-```bash
-mvn clean install -DskipTests
-```
-
-## 🐳 Docker Deployment
-
-**Build Docker image:**
-```bash
-docker build -t ecm-mcp-server:1.0.0 .
-```
-
-**Run container:**
-```bash
-docker run -d \
-  -p 8080:8080 \
-  -e FILENET_BASE_URL=https://filenet.example.com:9080/fncmis \
-  -e FILENET_USERNAME=admin \
-  -e FILENET_PASSWORD=password \
-  --name ecm-mcp-server \
-  ecm-mcp-server:1.0.0
-```
-
-**Using Docker Compose:**
-```bash
-docker-compose up -d
-```
-
-## 🔐 Security
-
-### Best Practices
-
-1. **Secure Credentials**
-   - Use environment variables
-   - Never commit credentials
-   - Use secrets management (Vault, AWS Secrets Manager)
-
-2. **HTTPS Only**
-   - Always use HTTPS for ECM APIs
-   - Validate SSL certificates
-   - TLS 1.2 or higher
-
-3. **Authentication**
-   - Prefer API key over basic auth
-   - Rotate credentials regularly
-   - Implement rate limiting
-
-4. **Network Security**
-   - Run behind firewall/VPN
-   - Limit access to trusted networks
-   - Use Spring Security for endpoints
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Write tests
-5. Build and test (`mvn clean verify`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Spring Boot](https://spring.io/projects/spring-boot) - Application framework
-- [Model Context Protocol](https://modelcontextprotocol.io/) - MCP specification
-- [Resilience4j](https://resilience4j.readme.io/) - Resilience patterns
-- [Project Reactor](https://projectreactor.io/) - Reactive programming
-- [Micrometer](https://micrometer.io/) - Metrics and observability
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/vspaswin/ecm-mcp-server-springboot/issues)
-- **Documentation**: [docs/](docs/)
-- **Quick Start**: [QUICKSTART.md](QUICKSTART.md)
-- **Architecture**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- **Extension Guide**: [docs/COPILOT_GUIDE.md](docs/COPILOT_GUIDE.md)
-
-## 🗺️ Roadmap
-
-- [x] Spring Boot 4 & Java 21 support
-- [x] Reactive WebFlux architecture
-- [x] Resilience patterns (circuit breaker, retry)
-- [x] Comprehensive documentation
-- [x] Extensible tool registration
-- [ ] OAuth 2.0 authentication support
-- [ ] Bulk document operations
-- [ ] Advanced permission management
-- [ ] WebSocket transport for MCP
-- [ ] GraphQL API support
-- [ ] Multi-tenancy support
-- [ ] AI-powered document classification
+**Restart Claude Desktop** and look for the 🔨 tools icon to see available ECM tools.
 
 ---
 
-**Built with ❤️ using Spring Boot 4 and Java 21 for JPMorgan Chase and Enterprise Applications**
+## 📦 Project Structure
+
+```
+ecm-mcp-server-springboot/
+├── src/main/java/com/jpmc/ecm/
+│   ├── mcp/
+│   │   └── McpServerApplication.java    # Main entry point
+│   ├── handler/                         # MCP tool handlers
+│   │   ├── DocumentHandler.java
+│   │   ├── FolderHandler.java
+│   │   ├── SearchHandler.java
+│   │   ├── SecurityHandler.java
+│   │   ├── WorkflowHandler.java
+│   │   └── MetadataHandler.java
+│   ├── service/                         # Business logic
+│   │   ├── DocumentService.java
+│   │   ├── FolderService.java
+│   │   ├── SearchService.java
+│   │   ├── SecurityService.java
+│   │   ├── WorkflowService.java
+│   │   └── MetadataService.java
+│   ├── client/                          # ECM API client
+│   │   └── EcmApiClient.java
+│   ├── config/                          # Configuration
+│   │   └── WebClientConfig.java
+│   └── model/                           # Domain models
+│       ├── Document.java
+│       ├── Folder.java
+│       ├── SearchResult.java
+│       ├── Permissions.java
+│       └── WorkflowInstance.java
+├── src/main/resources/
+│   └── application.yml                  # Configuration
+├── COPILOT.md                          # Comprehensive dev guide
+├── ARCHITECTURE.md                     # System design docs
+├── README.md                           # This file
+└── pom.xml                             # Maven dependencies
+```
+
+---
+
+## 🚀 Extending the Server
+
+### Adding a New Tool (Quick Example)
+
+See [COPILOT.md](COPILOT.md) for detailed step-by-step instructions. Here's the overview:
+
+**1. Add Handler Method**
+```java
+// In DocumentHandler.java
+private Map<String, Object> handleCopy(Map<String, Object> arguments) {
+    String sourceId = (String) arguments.get("sourceId");
+    String targetFolder = (String) arguments.get("targetFolder");
+    
+    Document copied = documentService.copyDocument(sourceId, targetFolder).block();
+    return Map.of("success", true, "document", copied);
+}
+```
+
+**2. Add Service Method**
+```java
+// In DocumentService.java
+public Mono<Document> copyDocument(String sourceId, String targetFolder) {
+    return ecmApiClient.copyDocument(sourceId, targetFolder);
+}
+```
+
+**3. Add Client Method**
+```java
+// In EcmApiClient.java
+public Mono<Document> copyDocument(String sourceId, String targetFolder) {
+    return webClient.post()
+        .uri("/documents/copy")
+        .bodyValue(Map.of("sourceId", sourceId, "targetFolder", targetFolder))
+        .retrieve()
+        .bodyToMono(Document.class);
+}
+```
+
+**4. Register Tool** in `McpServerApplication.handleToolsList()`
+
+Full examples with error handling, validation, and testing in [COPILOT.md](COPILOT.md).
+
+---
+
+## 🧪 Testing
+
+### Run Tests
+```bash
+# All tests
+mvn test
+
+# Specific test
+mvn test -Dtest=DocumentServiceTest
+
+# With coverage
+mvn verify
+```
+
+### Test Examples
+
+**Unit Test** (with mocked dependencies):
+```java
+@SpringBootTest
+class DocumentServiceTest {
+    @MockBean
+    private EcmApiClient ecmApiClient;
+    
+    @Autowired
+    private DocumentService documentService;
+    
+    @Test
+    void testGetDocument() {
+        when(ecmApiClient.getDocument("doc123"))
+            .thenReturn(Mono.just(expectedDoc));
+            
+        Document result = documentService.getDocument("doc123").block();
+        assertEquals("doc123", result.getId());
+    }
+}
+```
+
+**Integration Test** (with MockWebServer):
+```java
+class EcmApiClientTest {
+    private MockWebServer mockWebServer;
+    private EcmApiClient client;
+    
+    @Test
+    void testGetDocument() {
+        mockWebServer.enqueue(new MockResponse()
+            .setBody("{\"id\":\"doc123\"}")
+            .setResponseCode(200));
+            
+        Document doc = client.getDocument("doc123").block();
+        assertEquals("doc123", doc.getId());
+    }
+}
+```
+
+See [COPILOT.md - Testing Section](COPILOT.md#testing) for comprehensive testing strategies.
+
+---
+
+## ⚙️ Configuration
+
+### application.yml
+
+```yaml
+server:
+  port: 8080
+
+ecm:
+  api:
+    base-url: ${ECM_BASE_URL:http://localhost:8081/api}
+    username: ${ECM_USERNAME:admin}
+    password: ${ECM_PASSWORD:admin}
+    timeout: 30
+
+logging:
+  level:
+    com.jpmc.ecm: DEBUG
+```
+
+### Environment Variables
+
+- `ECM_BASE_URL` - ECM API endpoint
+- `ECM_USERNAME` - API username
+- `ECM_PASSWORD` - API password
+
+---
+
+## 🔐 Security Best Practices
+
+1. **Never commit credentials** to version control
+2. **Use environment variables** for sensitive data
+3. **Secure secrets** with Vault or AWS Secrets Manager in production
+4. **HTTPS only** for ECM API connections
+5. **Validate SSL certificates** in production
+6. **Rotate credentials** regularly
+7. **Use least-privilege** API accounts
+
+---
+
+## 📊 Technology Stack
+
+- **Spring Boot 3.4.2** - Application framework
+- **Spring WebFlux** - Reactive web framework
+- **Project Reactor** - Reactive programming
+- **Java 21** - Modern Java features
+- **Maven 3.9+** - Build tool
+- **Jackson** - JSON processing
+- **SLF4J + Logback** - Logging
+- **JUnit 5 + Mockito** - Testing
+- **OkHttp MockWebServer** - Integration testing
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Make changes
+4. Write tests (see [COPILOT.md](COPILOT.md) for testing patterns)
+5. Build and test (`mvn clean verify`)
+6. Commit (`git commit -m 'Add amazing feature'`)
+7. Push (`git push origin feature/amazing-feature`)
+8. Open Pull Request
+
+---
+
+## 🐛 Troubleshooting
+
+### Build Errors
+
+**Error**: `invalid source release 21 with --enable-preview`
+
+**Solution**:
+```bash
+git pull origin main  # Get latest pom.xml
+mvn clean install
+```
+
+### Connection Errors
+
+**Error**: Connection refused to ECM API
+
+**Solution**:
+1. Verify `ECM_BASE_URL` is correct
+2. Check network connectivity
+3. Verify ECM API is running
+4. Check firewall/proxy settings
+
+### Authentication Errors
+
+**Error**: 401 Unauthorized
+
+**Solution**:
+1. Verify `ECM_USERNAME` and `ECM_PASSWORD`
+2. Check account is not locked
+3. Verify credentials have API access
+4. Test with curl/Postman first
+
+---
+
+## 📖 Additional Resources
+
+- **[Model Context Protocol Spec](https://modelcontextprotocol.io)** - MCP protocol details
+- **[Spring WebFlux Guide](https://docs.spring.io/spring-framework/reference/web/webflux.html)** - Reactive programming
+- **[Project Reactor Docs](https://projectreactor.io/docs)** - Reactive types (Mono/Flux)
+- **[Java 21 Features](https://openjdk.org/projects/jdk/21/)** - Modern Java capabilities
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Core MCP server implementation
+- [x] Document management tools
+- [x] Search functionality
+- [x] Workflow operations
+- [x] Security/permissions management
+- [x] Comprehensive documentation (COPILOT.md, ARCHITECTURE.md)
+- [ ] OAuth 2.0 authentication support
+- [ ] Batch operations
+- [ ] Caching layer (Redis)
+- [ ] Circuit breaker pattern (Resilience4j)
+- [ ] Rate limiting
+- [ ] Event streaming (WebSocket)
+- [ ] Multi-tenancy support
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Model Context Protocol](https://modelcontextprotocol.io/) for the MCP specification
+- [Spring Boot](https://spring.io/projects/spring-boot) for the application framework
+- [Project Reactor](https://projectreactor.io/) for reactive programming support
+
+---
+
+## 📞 Support
+
+- **Documentation**: [COPILOT.md](COPILOT.md) | [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Issues**: [GitHub Issues](https://github.com/vspaswin/ecm-mcp-server-springboot/issues)
+- **Questions**: Open a discussion in GitHub
+
+---
+
+**Built with ❤️ for JPMorgan Chase and Enterprise Applications**
+
+**Ready to extend this server?** Start with [COPILOT.md](COPILOT.md) - it has everything GitHub Copilot needs to help you build new features!
