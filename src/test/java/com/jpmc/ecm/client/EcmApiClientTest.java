@@ -55,13 +55,15 @@ class EcmApiClientTest {
 
     @Test
     void testGetDocument() {
-        String documentJson = """{
-            "id": "doc123",
-            "title": "Test Document",
-            "fileName": "test.pdf",
-            "mimeType": "application/pdf",
-            "size": 1024
-        }""";
+        String documentJson = """
+            {
+                "id": "doc123",
+                "title": "Test Document",
+                "fileName": "test.pdf",
+                "mimeType": "application/pdf",
+                "size": 1024
+            }
+            """;
 
         mockWebServer.enqueue(new MockResponse()
             .setBody(documentJson)
