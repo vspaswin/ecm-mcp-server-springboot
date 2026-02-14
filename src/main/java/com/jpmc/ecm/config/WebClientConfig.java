@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -69,7 +70,8 @@ public class WebClientConfig {
      */
     private ExchangeFilterFunction authenticationFilter() {
         return (request, next) -> {
-            var builder = request.mutate();
+            // Create new request with authentication headers
+            ClientRequest.Builder builder = ClientRequest.from(request);
 
             // Add API key if configured
             if (ecmApiProperties.getApiKey() != null && !ecmApiProperties.getApiKey().isEmpty()) {
@@ -105,9 +107,9 @@ public class WebClientConfig {
     private ExchangeFilterFunction errorHandlingFilter() {
         return ExchangeFilterFunction.ofResponseProcessor(response -> {
             if (response.statusCode().isError()) {
-                log.error("ECM API Error Response: {} {}", 
-                         response.statusCode(), 
-                         response.statusCode().getReasonPhrase());
+                log.error("ECM API Error Response: {} (HTTP {})", 
+                         response.statusCode().value(),
+                         response.statusCode().value());
             }
             return Mono.just(response);
         });
