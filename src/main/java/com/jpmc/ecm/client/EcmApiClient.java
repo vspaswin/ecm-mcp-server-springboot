@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class EcmApiClient {
         return ecmWebClient.get()
                 .uri("/health")
                 .retrieve()
-                .onStatus(HttpStatus::isError, response -> 
+                .onStatus(HttpStatusCode::isError, response -> 
                     handleErrorResponse(response.statusCode(), "Health check failed"))
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .doOnSuccess(result -> log.info("ECM API health check successful"))
@@ -72,7 +72,7 @@ public class EcmApiClient {
                         .with("folderId", folderId != null ? folderId : "")
                         .with("metadata", metadata != null ? metadata : Map.of()))
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Failed to upload document"))
                 .bodyToMono(DocumentDto.class)
                 .doOnSuccess(doc -> log.info("Document uploaded successfully: {}", doc.getId()))
@@ -90,7 +90,7 @@ public class EcmApiClient {
         return ecmWebClient.get()
                 .uri("/documents/{id}", documentId)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), 
                         "Failed to get document: " + documentId))
                 .bodyToMono(DocumentDto.class)
@@ -109,7 +109,7 @@ public class EcmApiClient {
         return ecmWebClient.get()
                 .uri("/documents/{id}/content", documentId)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), 
                         "Failed to download document: " + documentId))
                 .bodyToFlux(DataBuffer.class)
@@ -128,7 +128,7 @@ public class EcmApiClient {
         return ecmWebClient.delete()
                 .uri("/documents/{id}", documentId)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), 
                         "Failed to delete document: " + documentId))
                 .bodyToMono(Void.class)
@@ -148,7 +148,7 @@ public class EcmApiClient {
                 .uri("/documents/search")
                 .bodyValue(searchRequest)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Search failed"))
                 .bodyToMono(SearchResultDto.class)
                 .doOnSuccess(result -> log.info("Search returned {} results", 
@@ -178,7 +178,7 @@ public class EcmApiClient {
                 .uri("/folders")
                 .bodyValue(payload)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Failed to create folder"))
                 .bodyToMono(FolderDto.class)
                 .doOnSuccess(folder -> log.info("Folder created: {}", folder.getId()))
@@ -204,7 +204,7 @@ public class EcmApiClient {
                         .queryParam("includeSubfolders", includeSubfolders)
                         .build(folderId))
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), 
                         "Failed to get folder contents: " + folderId))
                 .bodyToMono(FolderDto.class)
@@ -224,7 +224,7 @@ public class EcmApiClient {
         return ecmWebClient.get()
                 .uri("/documents/{id}/metadata", documentId)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Failed to get metadata"))
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .doOnSuccess(metadata -> log.debug("Retrieved metadata for: {}", documentId))
@@ -246,7 +246,7 @@ public class EcmApiClient {
                 .uri("/documents/{id}/metadata", documentId)
                 .bodyValue(metadata)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Failed to update metadata"))
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .doOnSuccess(m -> log.info("Metadata updated for: {}", documentId))
@@ -265,7 +265,7 @@ public class EcmApiClient {
         return ecmWebClient.get()
                 .uri("/documents/{id}/versions", documentId)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Failed to get versions"))
                 .bodyToMono(new ParameterizedTypeReference<List<VersionDto>>() {})
                 .doOnSuccess(versions -> log.debug("Retrieved {} versions", versions.size()))
@@ -294,7 +294,7 @@ public class EcmApiClient {
                 .uri("/workflows")
                 .bodyValue(payload)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), "Failed to start workflow"))
                 .bodyToMono(WorkflowDto.class)
                 .doOnSuccess(workflow -> log.info("Workflow started: {}", workflow.getWorkflowId()))
@@ -312,7 +312,7 @@ public class EcmApiClient {
         return ecmWebClient.get()
                 .uri("/workflows/{id}", workflowId)
                 .retrieve()
-                .onStatus(HttpStatus::isError, response ->
+                .onStatus(HttpStatusCode::isError, response ->
                     handleErrorResponse(response.statusCode(), 
                         "Failed to get workflow status: " + workflowId))
                 .bodyToMono(WorkflowDto.class)
@@ -324,10 +324,10 @@ public class EcmApiClient {
     /**
      * Handle error responses
      */
-    private Mono<? extends Throwable> handleErrorResponse(HttpStatus status, String message) {
+    private Mono<? extends Throwable> handleErrorResponse(HttpStatusCode status, String message) {
         return Mono.error(new EcmApiException(
             status.value(),
-            message + ": " + status.getReasonPhrase()
+            message + " (HTTP " + status.value() + ")"
         ));
     }
 }
