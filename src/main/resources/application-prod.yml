@@ -1,0 +1,19 @@
+spring:
+  main:
+    lazy-initialization: false
+
+server:
+  compression:
+    enabled: true
+  http2:
+    enabled: true
+
+logging:
+  level:
+    root: WARN
+    com.jpmc.ecm: INFO
+
+management:
+  endpoint:
+    health:
+      show-details: when-authorized

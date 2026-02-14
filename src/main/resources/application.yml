@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: ecm-mcp-server
+  
+  main:
+    banner-mode: console
+    web-application-type: servlet
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+# ECM API Configuration
+ecm:
+  api:
+    base-url: ${ECM_API_URL:https://ecm-api.example.com/api/v1}
+    username: ${ECM_USERNAME:}
+    password: ${ECM_PASSWORD:}
+    api-key: ${ECM_API_KEY:}
+    timeout:
+      connect: ${ECM_CONNECT_TIMEOUT:10s}
+      read: ${ECM_READ_TIMEOUT:30s}
+    max-retries: ${ECM_MAX_RETRIES:3}
+    retry-backoff: ${ECM_RETRY_BACKOFF:1s}
+
+# MCP Protocol Configuration
+mcp:
+  protocol:
+    version: "2024-11-05"
+    transport: stdio
+    capabilities:
+      tools: true
+      prompts: false
+      resources: false
+
+# Resilience Configuration
+resilience4j:
+  retry:
+    instances:
+      ecmApi:
+        maxAttempts: 3
+        waitDuration: 1000
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - java.io.IOException
+          - org.springframework.web.reactive.function.client.WebClientRequestException
+  
+  circuitbreaker:
+    instances:
+      ecmApi:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        recordExceptions:
+          - java.io.IOException
+          - org.springframework.web.reactive.function.client.WebClientException
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.jpmc.ecm: DEBUG
+    org.springframework.web: INFO
+    reactor.netty: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/ecm-mcp-server.log
+    max-size: 10MB
+    max-history: 7

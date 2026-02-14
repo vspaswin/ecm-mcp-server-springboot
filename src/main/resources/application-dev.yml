@@ -1,0 +1,13 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+
+logging:
+  level:
+    com.jpmc.ecm: DEBUG
+    org.springframework.web: DEBUG
+
+ecm:
+  api:
+    base-url: http://localhost:8081/api/v1
